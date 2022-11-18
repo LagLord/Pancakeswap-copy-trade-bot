@@ -12,8 +12,13 @@ bsc = "https://rpc.ankr.com/bsc_testnet_chapel"
 web3 = Web3(Web3.HTTPProvider(bsc))
 if web3.isConnected(): print("Connected to BSC")
 
+# converting addresses to suitable format for web3
+
 pancakeswap_address = web3.toChecksumAddress(pancakeswap_address)
 sender_address = web3.toChecksumAddress(my_address)
+for token in token_addresses:
+    token_addresses[token] = web3.toChecksumAddress(token_addresses[token])
+
 # Setup the PancakeSwap contract
 contract = web3.eth.contract(address=pancakeswap_address, abi=panabi)
 
@@ -23,11 +28,11 @@ contract = web3.eth.contract(address=pancakeswap_address, abi=panabi)
 #         token_abi_list[name] = get_abi(token_addresses[name])
 
 
-def calcSell(tokenAddress):
-    oneToken = web3.toWei(1, 'Ether')
-    price = contract.functions.getAmountsOut(oneToken, [tokenAddress, token_addresses['WBNB']]).call()
-    normalizedPrice = web3.fromWei(price[1], 'Ether')
-    return normalizedPrice
+# def calcSell(tokenAddress):
+#     oneToken = web3.toWei(1, 'Ether')
+#     price = contract.functions.getAmountsOut(oneToken, [tokenAddress, token_addresses['WBNB']]).call()
+#     normalizedPrice = web3.fromWei(price[1], 'Ether')
+#     return normalizedPrice
 
 
 # print(calcSell(token_addresses['BUSD']))
@@ -72,7 +77,11 @@ def swap_token(hash):
         print(web3.toWei(int(trx['gas'], 0) * int(trx['gasPrice'], 0) / 10 ** 18, 'ether'))
 
         if 'amountIn' not in data:
-            data['amountIn'] = int(trx['value'], 0)
+            max_bnb = max_limit['BNB'] * (10 ** 18)
+            data['amountIn'] = int(trx['value'], 0) if int(trx['value'], 0) <= max_bnb else max_bnb
+        elif data['path'][0] == token_addresses['BUSD'] or data['path'][0] == token_addresses['USDT']:
+            max_usdt = max_limit['BUSD'] * (10 ** 18)
+            data['amountIn'] = data['amountIn'] if int(data['amountIn']) <= max_usdt else max_usdt
 
         if "swapExactETHForTokens" in str(swap_function) or "swapETHForExactTokens" in str(swap_function):
             pancakeswap2_txn = swap_function(
