@@ -7,7 +7,7 @@ from config import *
 
 trx_list = []
 
-# bsc = 'https://bsc-dataseed.binance.org/'
+bsc = 'https://bsc-dataseed.binance.org/'
 # bsc = "https://rpc.ankr.com/bsc_testnet_chapel"
 web3 = Web3(Web3.HTTPProvider(bsc))
 if web3.isConnected(): print("Connected to BSC")
@@ -141,7 +141,7 @@ def swap_token(hash):
 
 
 def check_holders_1k(token_address):
-    url = f"https://api.covalenthq.com/v1/56/tokens/{token_address}/token_holders/?format=JSON&page-size=1000&key=ckey_cfa104fa7b3847e89f1ab12df46"
+    url = f"https://api.covalenthq.com/v1/56/tokens/{token_address}/token_holders/?format=JSON&page-size=1000&key={covalent_api_key}"
 
     res = requests.get(url).json()
     # print(res)
