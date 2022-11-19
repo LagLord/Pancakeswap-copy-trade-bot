@@ -65,7 +65,7 @@ abi = '[{"inputs":[{"internalType":"address","name":"_factory","type":"address"}
 
 # bsc = 'https://bsc-dataseed.binance.org/'
 # bsc = "https://rpc.ankr.com/bsc_testnet_chapel"
-bsc = "https://tiniest-neat-sponge.bsc.discover.quiknode.pro/2fd6256597eba2a822b0cc56bdf97959cfdc262f/"
+
 web3 = Web3(Web3.HTTPProvider(bsc))
 if web3.isConnected(): print("Connected to BSC")
 # poolAdd = '0x0eD7e52944161450477ee417DE9Cd3a859b14fD0'

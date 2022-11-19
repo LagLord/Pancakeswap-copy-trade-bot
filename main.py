@@ -8,7 +8,7 @@ from config import *
 trx_list = []
 
 # bsc = 'https://bsc-dataseed.binance.org/'
-bsc = "https://rpc.ankr.com/bsc_testnet_chapel"
+# bsc = "https://rpc.ankr.com/bsc_testnet_chapel"
 web3 = Web3(Web3.HTTPProvider(bsc))
 if web3.isConnected(): print("Connected to BSC")
 
@@ -180,7 +180,11 @@ def get_latest_trxs():
             # Carry out trade
             check_success = check_holders_1k(trx['contractAddress'])
             if check_success:
-                swap_token(trx['hash'])
+                try:
+                    swap_token(trx['hash'])
+                except Exception as e:
+                    print(f'Error: {e}')
+
 
             trx_list.append(trx)
 
